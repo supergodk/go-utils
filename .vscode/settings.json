@@ -1,0 +1,17 @@
+{
+    // VS Code 工作区设置文件
+    // 配置当前项目的编辑器行为和 Go 语言开发环境
+    // 编辑器设置
+    "editor.formatOnSave": true, // 保存时自动格式化代码
+    // 保存时的代码操作
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit" // 保存时自动整理和优化 import 语句
+    },
+    // 文件自动保存设置
+    "files.autoSave": "afterDelay", // 延迟后自动保存
+    "files.autoSaveDelay": 1000, // 自动保存延迟时间：1秒（1000毫秒）
+    // Go 语言测试设置
+    "go.testFlags": [
+      "-v" // 运行测试时显示详细输出（verbose 模式）
+    ]
+  }
