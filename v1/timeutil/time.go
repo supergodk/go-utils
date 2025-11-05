@@ -4,6 +4,9 @@
 package timeutil
 
 import (
+	"fmt"
+	"strconv"
+	"strings"
 	"sync/atomic"
 	"time"
 )
@@ -237,4 +240,68 @@ func ClockTickMicroSecondUniq() int64 {
 			return tNow
 		}
 	}
+}
+
+// GetDurationSeconds 将时间字符串转换为总秒数
+// 支持格式: "hh:mm:ss" 或 "mm:ss"
+// 例如: "01:30:45" -> 5445秒, "05:30" -> 330秒
+// 参数:
+//   - durationStr: 时间持续字符串，格式为 "hh:mm:ss" 或 "mm:ss"
+//
+// 返回:
+//   - seconds: 转换后的总秒数
+//   - error: 如果格式无效或数值超出范围，返回错误
+//
+// GetDurationSeconds converts a time duration string to total seconds.
+// Supported formats: "hh:mm:ss" or "mm:ss"
+// Examples: "01:30:45" -> 5445 seconds, "05:30" -> 330 seconds
+// Parameters:
+//   - durationStr: Duration string in format "hh:mm:ss" or "mm:ss"
+//
+// Returns:
+//   - seconds: Total seconds after conversion
+//   - error: Returns an error if the format is invalid or values are out of range
+func GetDurationSeconds(durationStr string) (seconds int, err error) {
+	if durationStr == "" {
+		return 0, fmt.Errorf("empty duration string")
+	}
+
+	parts := strings.Split(durationStr, ":")
+	if len(parts) < 2 || len(parts) > 3 {
+		return 0, fmt.Errorf("invalid time format: %s, use hh:mm:ss or mm:ss", durationStr)
+	}
+
+	var hours, minutes int
+	switch len(parts) {
+	case 3:
+		hours, err = strconv.Atoi(parts[0])
+		if err != nil {
+			return 0, fmt.Errorf("invalid hour format: %w", err)
+		}
+		if hours < 0 {
+			return 0, fmt.Errorf("hours cannot be negative")
+		}
+		minutes, err = strconv.Atoi(parts[1])
+		if err != nil {
+			return 0, fmt.Errorf("invalid minute format: %w", err)
+		}
+		seconds, err = strconv.Atoi(parts[2])
+	case 2:
+		minutes, err = strconv.Atoi(parts[0])
+		if err != nil {
+			return 0, fmt.Errorf("invalid minute format: %w", err)
+		}
+		seconds, err = strconv.Atoi(parts[1])
+	}
+
+	if err != nil {
+		return 0, fmt.Errorf("invalid second format: %w", err)
+	}
+
+	if minutes < 0 || seconds < 0 || seconds >= 60 || minutes >= 60 {
+		return 0, fmt.Errorf("invalid minute or second value")
+	}
+
+	totalSeconds := hours*3600 + minutes*60 + seconds
+	return totalSeconds, nil
 }

@@ -8,6 +8,9 @@ import (
 )
 
 func Test(t *testing.T) {
-	a := timeutil.ClockTickMicroSecondUniq()
+	a, err := timeutil.GetDurationSeconds("01:30:45")
+	if err != nil {
+		t.Fatal(err)
+	}
 	fmt.Println(a)
 }
