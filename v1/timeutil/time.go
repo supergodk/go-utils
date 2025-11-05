@@ -170,3 +170,33 @@ func GetYesterdayTime(timestamp int64, locationName string) (int64, int64, error
 
 	return yesterdayStart, todayStart, nil
 }
+
+// GetLastMonthTime 获取给定时间戳对应的上个月的起止时间戳
+// 从上个月首日的 00:00:00 到最后一日的 23:59:59
+// 参数:
+//   - timestamp: 基准 Unix 时间戳
+//
+// 返回:
+//   - 第一个值: 上个月第一天 00:00:00 的 Unix 时间戳
+//   - 第二个值: 上个月最后一天 23:59:59 的 Unix 时间戳
+//
+// GetLastMonthTime returns the start and end timestamps of the previous month corresponding to the given timestamp.
+// From 00:00:00 on the first day of the previous month to 23:59:59 on the last day of the previous month.
+// Parameters:
+//   - timestamp: Base Unix timestamp
+//
+// Returns:
+//   - First value: Unix timestamp of 00:00:00 on the first day of the previous month
+//   - Second value: Unix timestamp of 23:59:59 on the last day of the previous month
+func GetLastMonthTime(timestamp int64) (int64, int64) {
+	date := time.Unix(timestamp, 0)
+
+	// 获取当前月份的第一天，然后减去一个月
+	firstOfCurrentMonth := time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, date.Location())
+	firstOfLastMonth := firstOfCurrentMonth.AddDate(0, -1, 0)
+
+	// 上个月的最后一天 23:59:59
+	lastOfLastMonth := firstOfCurrentMonth.Add(-time.Second)
+
+	return firstOfLastMonth.Unix(), lastOfLastMonth.Unix()
+}
