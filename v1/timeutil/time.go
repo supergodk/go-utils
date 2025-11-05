@@ -213,20 +213,20 @@ func GetLastMonthTime(timestamp int64) (int64, int64) {
 	return firstOfLastMonth.Unix(), lastOfLastMonth.Unix()
 }
 
-// ClockTickMicroSecondUniqFast 生成唯一的、单调递增的微秒级时间戳
+// ClockTickMicroSecondUniq 生成唯一的、单调递增的微秒级时间戳
 // 使用原子操作保证线程安全，适用于高并发场景
 // 如果同一微秒内有多次调用，会自动递增以确保唯一性
 //
 // 返回:
 //   - 唯一的微秒级 Unix 时间戳（Unix 时间戳 * 1000000）
 //
-// ClockTickMicroSecondUniqFast generates a unique, monotonically increasing microsecond-level timestamp.
+// ClockTickMicroSecondUniq generates a unique, monotonically increasing microsecond-level timestamp.
 // Uses atomic operations to ensure thread safety, suitable for high-concurrency scenarios.
 // If there are multiple calls within the same microsecond, it will automatically increment to ensure uniqueness.
 //
 // Returns:
 //   - A unique microsecond-level Unix timestamp (Unix timestamp * 1000000)
-func ClockTickMicroSecondUniqFast() int64 {
+func ClockTickMicroSecondUniq() int64 {
 	tNow := time.Now().UnixMicro()
 	for {
 		last := atomic.LoadInt64(&lastTickMicroSecond)

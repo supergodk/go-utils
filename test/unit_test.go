@@ -8,6 +8,6 @@ import (
 )
 
 func Test(t *testing.T) {
-	a := timeutil.ClockTickMicroSecondUniqFast()
+	a := timeutil.ClockTickMicroSecondUniq()
 	fmt.Println(a)
 }
