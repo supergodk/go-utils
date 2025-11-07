@@ -102,6 +102,22 @@ func (j *JwtGenerator) GenerateToken(options *GenerateTokenOptions) (string, err
 			ClaimMap:            j.ClaimMap,
 			KeyAlgorithm:        j.KeyAlgorithm,
 		}
+	} else {
+		if options.KeyAlgorithm == "" {
+			options.KeyAlgorithm = j.KeyAlgorithm
+		}
+		if options.PrivateKey == nil {
+			options.PrivateKey = j.PrivateKey
+		}
+		if options.TokenIssuer == "" {
+			options.TokenIssuer = j.TokenIssuer
+		}
+		if options.TokenExpireDuration == 0 {
+			options.TokenExpireDuration = j.TokenExpireDuration
+		}
+		if options.ClaimMap == nil {
+			options.ClaimMap = j.ClaimMap
+		}
 	}
 
 	// 使用 Builder 创建 token
